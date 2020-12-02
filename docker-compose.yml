@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  api:
+    build: ./
+    command: yarn dev
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3333
+      - NODE_ENV=development
+      - APP_KEY=mPx3YEx69UsMzry1sHOExrzLZ9V0RCBS
+      - DB_CONNECTION=pg
+      - PG_HOST=postgres
+      - PG_PORT=5432
+      - PG_USER=conduit
+      - PG_PASSWORD=conduit
+      - PG_DB_NAME=conduit
+    ports:
+      - 3333:3333
+    volumes:
+      - ./:/app
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:alpine
+    environment:
+      - DB_LOCAL=conduit
+      - POSTGRES_USER=conduit
+      - POSTGRES_PASSWORD=conduit
+    ports:
+      - 5432:5432
+    volumes:
+      - conduit-postgres:/var/lib/postgresql/data
+  adminer:
+    image: adminer
+    ports:
+      - 81:8080
+    depends_on:
+      - postgres
+
+volumes:
+  conduit-postgres:
